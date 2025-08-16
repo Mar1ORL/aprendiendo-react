@@ -1,7 +1,7 @@
 // Turnos 
 export const TURNS = {
-  x: '×',
-  o: '◯',
+  x: '❌',
+  o: '⭕',
 };
 
 // Combinaciones ganadoras

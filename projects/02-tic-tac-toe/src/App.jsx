@@ -10,8 +10,19 @@ import { WinnerModal } from './components/WinnerModal';
 
 
 function App() {
-  const [board, setBoard] = useState(Array(9).fill(null));
-  const [turn, setTurn] = useState(TURNS.x);
+  // Inicializamos el tablero (si existe en localStorage lo usamos, si no, creamos un tablero vacío)
+  const [board, setBoard] = useState(() => {
+    const getBoardFromStorage = window.localStorage.getItem('board');
+    return getBoardFromStorage ? JSON.parse(getBoardFromStorage) : Array(9).fill(null);
+  });
+
+  // lo mismo para el turno, si existe en localStorage lo usamos, si no, iniciamos con TURNS.x
+  const [turn, setTurn] = useState(() => {
+    const getTurnFromStorage = window.localStorage.getItem('turn');
+    return getTurnFromStorage ?? TURNS.x;
+  });
+
+  
   const [winner, setWinner] = useState(null);               // null === no hay ganador, false === empate
 
   
@@ -24,6 +35,10 @@ function App() {
 
     const newTurn = turn === TURNS.x ? TURNS.o : TURNS.x;   // cambiamos el turno (si es x pasa a o y viceversa)
     setTurn(newTurn);  
+
+    // guardar aqui la partida en localStorage
+    window.localStorage.setItem('board', JSON.stringify(newBoard));
+    window.localStorage.setItem('turn', newTurn);
     
     const newWinner = checkWinner(newBoard); 
     if (newWinner) {
@@ -38,6 +53,9 @@ function App() {
     setBoard(Array(9).fill(null));
     setTurn(TURNS.x);
     setWinner(null);
+
+    window.localStorage.removeItem('board');
+    window.localStorage.removeItem('turn');
   }
 
   return (
